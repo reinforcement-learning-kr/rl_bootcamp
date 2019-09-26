@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import torch.optim as optim
 import torch.nn.functional as F
-# from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 
 from model import MLP
 from replay_buffer import ReplayBuffer
@@ -93,8 +93,8 @@ def main():
     torch.manual_seed(0)
 
     # Create a SummaryWriter object by TensorBoard
-    dir_name = 'runs/' + 'dqn/' + 'CartPole-v1' + '_' + time.ctime()
-    # writer = SummaryWriter(log_dir=dir_name)
+    dir_name = 'runs/' + 'dqn/' + 'Pong_dqn' + '_' + time.ctime()
+    writer = SummaryWriter(log_dir=dir_name)
 
     # Main network
     qf = MLP(obs_dim, act_num).to(device)
@@ -153,9 +153,9 @@ def main():
         num_episodes += 1
         average_return = sum_returns / num_episodes if num_episodes > 0 else 0.0
 
-        # # Log experiment result for training episodes
-        # writer.add_scalar('Train/AverageReturns', average_return, episode)
-        # writer.add_scalar('Train/EpisodeReturns', sum_returns, episode)
+        # Log experiment result for training episodes
+        writer.add_scalar('Train/AverageReturns', average_return, episode)
+        writer.add_scalar('Train/EpisodeReturns', sum_returns, episode)
         
         if episode % 10 == 0:
             print('---------------------------------------')

@@ -6,7 +6,7 @@ class MLP(nn.Module):
     def __init__(self, 
                  input_size, 
                  output_size, 
-                 hidden_sizes=(64,64), 
+                 hidden_sizes=(512,512,512), 
                  activation=F.relu, 
     ):
         super(MLP, self).__init__()
