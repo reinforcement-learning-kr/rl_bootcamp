@@ -3,7 +3,7 @@ import gym
 import argparse
 import numpy as np
 import torch
-from model import MLP
+from model import *
 
 # Configurations
 parser = argparse.ArgumentParser()
@@ -20,7 +20,7 @@ def main():
     obs_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
 
-    mlp = MLP(obs_dim, act_dim, output_activation=torch.tanh).to(device)
+    mlp = GaussianPolicy(obs_dim, act_dim).to(device)
 
     if args.load is not None:
         pretrained_model_path = os.path.join('./save_model/' + str(args.load))
@@ -40,7 +40,8 @@ def main():
             if args.render:
                 env.render()
             
-            action = mlp(torch.Tensor(obs).to(device)).detach().cpu().numpy()
+            action, _, _ = mlp(torch.Tensor(obs).to(device))
+            action = action.detach().cpu().numpy()
             next_obs, reward, done, _ = env.step(action)
             
             total_reward += reward
