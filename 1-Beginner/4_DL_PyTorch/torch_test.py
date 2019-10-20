@@ -311,26 +311,26 @@ class Net(nn.Module):
 net = Net()
 
 # Define loss and optimizer
-criterion = torch.nn.MSELoss()
-optimizer = optim.Adam(net.parameters(), lr=0.001)
+# criterion = torch.nn.MSELoss()
+# optimizer = optim.Adam(net.parameters(), lr=0.001)
 
 
-hypothesis = net(inputs)
-loss = criterion(hypothesis, labels)
+# hypothesis = net(inputs)
+# loss = criterion(hypothesis, labels)
 
-optimizer.zero_grad() # initialize gradient
-loss.backward()       # compute gradient
-optimizer.step()      # improve step
+# optimizer.zero_grad() # initialize gradient
+# loss.backward()       # compute gradient
+# optimizer.step()      # improve step
 
 ##################################################################
 
 ## 2.2 Save & Load
 
 ### save
-torch.save(net.state_dict(), './save_model/model.pt')
+# torch.save(net.state_dict(), './save_model/model.pt')
 
 ### load
-net.load_state_dict(torch.load('./save_model/model.pt'))
+# net.load_state_dict(torch.load('./save_model/model.pt'))
 
 ##################################################################
 
