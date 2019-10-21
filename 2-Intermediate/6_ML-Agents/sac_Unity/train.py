@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import torch.optim as optim
 import torch.nn.functional as F
-# from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 
 from model import *
 from replay_buffer import ReplayBuffer

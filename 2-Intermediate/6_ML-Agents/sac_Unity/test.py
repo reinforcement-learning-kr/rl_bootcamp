@@ -8,7 +8,7 @@ from mlagents.envs import UnityEnvironment
 
 # Configurations
 parser = argparse.ArgumentParser()
-parser.add_argument('--load', type=str, default="Hopper_ep_160_rt_22.49_t_3516.pt",
+parser.add_argument('--load', type=str, default="Hopper_ep_480_rt_26.04_t_10116.pt",
                     help='load the saved model')
 args = parser.parse_args()
 
