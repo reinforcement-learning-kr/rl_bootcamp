@@ -76,7 +76,7 @@ def train_model(qf, qf_target, qf_optimizer, batch, step_count):
 
 def main():
     # Initialize environment
-    env = UnityEnvironment(file_name='../../env/Pong/Pong')
+    env = UnityEnvironment(file_name='../env/Pong/Pong')
 
     default_brain = env.brain_names[0]
     brain = env.brains[default_brain]

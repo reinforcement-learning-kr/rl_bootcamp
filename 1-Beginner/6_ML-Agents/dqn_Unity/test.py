@@ -15,7 +15,7 @@ args = parser.parse_args()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def main():
-    env = UnityEnvironment(file_name='../../env/Pong/Pong')
+    env = UnityEnvironment(file_name='../env/Pong/Pong')
 
     default_brain = env.brain_names[0]
     brain = env.brains[default_brain]
