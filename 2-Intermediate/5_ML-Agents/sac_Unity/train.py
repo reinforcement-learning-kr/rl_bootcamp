@@ -1,5 +1,4 @@
 import os
-import gym
 import time
 import argparse
 from mlagents.envs import UnityEnvironment
@@ -261,6 +260,8 @@ def main():
                                                                               + '_t_' + str(int(time.time() - start_time)) + '.pt')
                 torch.save(actor.state_dict(), ckpt_path)
                 break  
+
+    env.close()
 
 if __name__ == '__main__':
     main()

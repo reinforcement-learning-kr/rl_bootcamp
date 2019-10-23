@@ -1,5 +1,4 @@
 import os
-import gym
 import argparse
 import numpy as np
 import torch
@@ -63,6 +62,8 @@ def main():
             print('Episodes:', num_episodes)
             print('AverageReturn:', average_return)
             print('---------------------------------------')
+
+    env.close()
 
 if __name__ == "__main__":
     main()

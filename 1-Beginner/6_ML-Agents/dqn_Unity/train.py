@@ -178,5 +178,7 @@ def main():
             torch.save(qf.state_dict(), ckpt_path)
             break  
 
+    env.close()
+
 if __name__ == '__main__':
     main()
