@@ -63,5 +63,7 @@ def main():
             print('AverageReturn:', average_return)
             print('---------------------------------------')
 
+    env.close()
+
 if __name__ == "__main__":
     main()

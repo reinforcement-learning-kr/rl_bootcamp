@@ -262,5 +262,7 @@ def main():
                 torch.save(actor.state_dict(), ckpt_path)
                 break  
 
+    env.close()
+
 if __name__ == '__main__':
     main()
