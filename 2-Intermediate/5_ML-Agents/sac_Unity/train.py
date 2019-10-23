@@ -1,5 +1,4 @@
 import os
-import gym
 import time
 import argparse
 from mlagents.envs import UnityEnvironment
