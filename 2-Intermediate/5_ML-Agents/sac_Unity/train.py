@@ -52,16 +52,17 @@ def train_model(actor, qf1, qf2, qf1_target, qf2_target,
         print("done", done.shape)
 
     # Prediction π(s), logπ(s), π(s'), logπ(s'), Q1(s,a), Q2(s,a)
-    _, _, log_pi = actor(obs1)
+    _, pi, log_pi = actor(obs1)
     _, next_pi, next_log_pi = actor(obs2)
     q1 = qf1(obs1, acts).squeeze(1)
     q2 = qf2(obs1, acts).squeeze(1)
 
-    # Min Double-Q: min(Q1‾(s',π(s')), Q2‾(s',π(s')))
-    min_q_pi = torch.min(qf1_target(obs2, next_pi), qf2_target(obs2, next_pi)).squeeze(1).to(device)
+    # Min Double-Q: min(Q1(s,π(s)), Q2(s,π(s))), min(Q1‾(s',π(s')), Q2‾(s',π(s')))
+    min_q_pi = torch.min(qf1(obs1, pi), qf2(obs1, pi)).squeeze(1).to(device)
+    min_q_next_pi = torch.min(qf1_target(obs2, next_pi), qf2_target(obs2, next_pi)).squeeze(1).to(device)
 
     # Targets for Q and V regression
-    v_backup = min_q_pi - args.alpha*next_log_pi
+    v_backup = min_q_next_pi - args.alpha*next_log_pi
     q_backup = rews + args.gamma*(1-done)*v_backup
     q_backup.to(device)
 
@@ -71,6 +72,7 @@ def train_model(actor, qf1, qf2, qf1_target, qf2_target,
         print("q1", q1.shape)
         print("q2", q2.shape)
         print("min_q_pi", min_q_pi.shape)
+        print("min_q_next_pi", min_q_next_pi.shape)
         print("q_backup", q_backup.shape)
 
     # Soft actor-critic losses
