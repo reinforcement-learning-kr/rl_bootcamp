@@ -13,7 +13,7 @@ from model import *
 from replay_buffer import ReplayBuffer
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--training_eps', type=int, default=1000)
+parser.add_argument('--training_eps', type=int, default=500)
 parser.add_argument('--eval_per_train', type=int, default=50)
 parser.add_argument('--evaluation_eps', type=int, default=100)
 parser.add_argument('--threshold_return', type=int, default=-230)
