@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torch.optim as optim
 import torch.nn.functional as F
-from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.tensorboard import SummaryWriter
 
 from model import *
 from replay_buffer import ReplayBuffer
@@ -22,7 +22,7 @@ parser.add_argument('--alpha', type=float, default=0.2)
 parser.add_argument('--automatic_entropy_tuning', type=bool, default=True)
 parser.add_argument('--buffer_size', type=int, default=50000)
 parser.add_argument('--batch_size', type=int, default=64)
-parser.add_argument('--actor_lr', type=float, default=1e-4)
+parser.add_argument('--actor_lr', type=float, default=3e-4)
 parser.add_argument('--qf_lr', type=float, default=1e-3)
 parser.add_argument('--alpha_lr', type=float, default=1e-4)
 args = parser.parse_args()
@@ -129,7 +129,7 @@ def main():
 
     # Create a SummaryWriter object by TensorBoard
     dir_name = 'runs/' + 'Hopper' + '_' + time.ctime()
-    writer = SummaryWriter(log_dir=dir_name)
+    #writer = SummaryWriter(log_dir=dir_name)
 
     # Main network
     actor = GaussianPolicy(obs_dim, act_dim).to(device)
@@ -223,10 +223,10 @@ def main():
         train_average_return = train_sum_returns / train_num_episodes if train_num_episodes > 0 else 0.0
 
         # Log experiment result for training episodes
-        writer.add_scalar('Train/AverageReturns', train_average_return, episode)
-        writer.add_scalar('Train/EpisodeReturns', train_episode_return, episode)
-        if args.automatic_entropy_tuning:
-            writer.add_scalar('Train/Alpha', args.alpha, episode)
+        #writer.add_scalar('Train/AverageReturns', train_average_return, episode)
+        #writer.add_scalar('Train/EpisodeReturns', train_episode_return, episode)
+        #if args.automatic_entropy_tuning:
+        #    writer.add_scalar('Train/Alpha', args.alpha, episode)
         
         # Perform the evaluation phase -- no learning
         if episode > 0 and episode % args.eval_per_train == 0:
@@ -245,8 +245,8 @@ def main():
                 eval_average_return = eval_sum_returns / eval_num_episodes if eval_num_episodes > 0 else 0.0
 
                 # Log experiment result for evaluation episodes
-                writer.add_scalar('Eval/AverageReturns', eval_average_return, episode)
-                writer.add_scalar('Eval/EpisodeReturns', eval_episode_return, episode)
+                #writer.add_scalar('Eval/AverageReturns', eval_average_return, episode)
+                #writer.add_scalar('Eval/EpisodeReturns', eval_episode_return, episode)
 
             print('---------------------------------------')
             print('Episodes:', episode)
