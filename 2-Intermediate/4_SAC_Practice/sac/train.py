@@ -13,17 +13,17 @@ from model import *
 from replay_buffer import ReplayBuffer
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--training_eps', type=int, default=500)
+parser.add_argument('--training_eps', type=int, default=1000)
 parser.add_argument('--eval_per_train', type=int, default=50)
 parser.add_argument('--evaluation_eps', type=int, default=100)
 parser.add_argument('--threshold_return', type=int, default=-230)
 parser.add_argument('--gamma', type=float, default=0.99)
-parser.add_argument('--alpha', type=float, default=0.05)
-parser.add_argument('--automatic_entropy_tuning', type=bool, default=True)
+parser.add_argument('--alpha', type=float, default=0.2)
+parser.add_argument('--automatic_entropy_tuning', type=bool, default=False)
 parser.add_argument('--buffer_size', type=int, default=10000)
 parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--actor_lr', type=float, default=1e-4)
-parser.add_argument('--qf_lr', type=float, default=3e-3)
+parser.add_argument('--qf_lr', type=float, default=1e-3)
 parser.add_argument('--alpha_lr', type=float, default=1e-4)
 args = parser.parse_args()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -107,6 +107,8 @@ def train_model(actor, qf1, qf2, qf1_target, qf2_target,
     soft_target_update(qf1, qf1_target)
     soft_target_update(qf2, qf2_target)
 
+    return args.alpha
+
 def main():
     # Initialize environment
     env = gym.make('Pendulum-v0')
@@ -181,13 +183,13 @@ def main():
                 # Start training when the number of experience is greater than batch size
                 if steps > args.batch_size:
                     batch = replay_buffer.sample(args.batch_size)
-                    train_model(actor, qf1, qf2, qf1_target, qf2_target, 
-                                actor_optimizer, qf1_optimizer, qf2_optimizer,
-                                batch, target_entropy, log_alpha, alpha_optimizer)
+                    args.alpha = train_model(actor, qf1, qf2, qf1_target, qf2_target, 
+                                            actor_optimizer, qf1_optimizer, qf2_optimizer,
+                                            batch, target_entropy, log_alpha, alpha_optimizer)
             
             total_reward += reward
             obs = next_obs
-        return steps, total_reward
+        return steps, total_reward, args.alpha
 
     train_sum_returns = 0.
     train_num_episodes = 0
@@ -200,7 +202,7 @@ def main():
         eval_mode = False
 
         # Run one episode
-        steps, train_episode_return = run_one_episode(steps, eval_mode)
+        steps, train_episode_return, args.alpha = run_one_episode(steps, eval_mode)
 
         train_sum_returns += train_episode_return
         train_num_episodes += 1
@@ -209,7 +211,9 @@ def main():
 
         # Log experiment result for training episodes
         writer.add_scalar('Train/AverageReturns', train_average_return, episode)
-        writer.add_scalar('Train/EpisodeReturns', train_sum_returns, episode)
+        writer.add_scalar('Train/EpisodeReturns', train_episode_return, episode)
+        if args.automatic_entropy_tuning:
+            writer.add_scalar('Train/Alpha', args.alpha, episode)
         
         # Perform the evaluation phase -- no learning
         if episode > 0 and episode % args.eval_per_train == 0:
@@ -220,7 +224,7 @@ def main():
 
             for _ in range(args.evaluation_eps):
                 # Run one episode
-                steps, eval_episode_return = run_one_episode(steps, eval_mode)
+                steps, eval_episode_return, _ = run_one_episode(steps, eval_mode)
 
                 eval_sum_returns += eval_episode_return
                 eval_num_episodes += 1
