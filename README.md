@@ -12,7 +12,7 @@
 
 진행한 강의 내용을 포함한 시간표는 아래와 같습니다. 
 
-![timetable](./0-prerequisite/timetable.png)
+![timetable](https://github.com/reinforcement-learning-kr/rl_bootcamp/blob/Q_branch/0-Prerequisite/timetable.png)
 
 
 
